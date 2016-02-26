@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="Security" uuid="9af42623-2469-441b-8d41-3a7368e1da82">
+    <database-info product="MySQL" version="5.6.20" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.34 ( Revision: jess.balint@oracle.com-20141014163213-wqbwpf1ok2kvo1om )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="security_demo"/>
+    <table name="user" schema="" catalog="security_demo" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="user_name" sqlType="VARCHAR" precision="30" scale="0" nullable="true" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="first_name" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="last_name" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="state" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_USER" table="user_user_profile" schema="" catalog="security_demo" columns="user_id"/>
+      <index name="userName" unique="true" columns="user_name"/>
+    </table>
+    <table name="user_profile" schema="" catalog="security_demo" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="type" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_USER_PROFILE" table="user_user_profile" schema="" catalog="security_demo" columns="user_profile_id"/>
+      <index name="type" unique="true" columns="type"/>
+    </table>
+    <table name="user_user_profile" schema="" catalog="security_demo" type="TABLE">
+      <column name="user_id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="user_profile_id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <primary-key name="PRIMARY" columns="user_id,user_profile_id"/>
+      <foreign-key name="FK_USER" columns="user_id" ref-table="user" ref-schema="" ref-catalog="security_demo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_USER_PROFILE" columns="user_profile_id" ref-table="user_profile" ref-schema="" ref-catalog="security_demo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_USER_PROFILE" unique="false" columns="user_profile_id"/>
+    </table>
+  </data-source>
+</component>

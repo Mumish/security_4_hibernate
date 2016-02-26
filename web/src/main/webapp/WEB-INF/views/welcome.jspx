@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:jsp="http://java.sun.com/JSP/Page">
+
+<jsp:directive.page pageEncoding="UTF-8" contentType="text/html; UTF-8"/>
+<head>
+	<title>Welcome page</title>
+</head>
+<body>
+	${greeting}
+	This is a welcome page. U may place what U want here
+</body>
+</html>
