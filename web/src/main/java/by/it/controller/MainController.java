@@ -19,6 +19,7 @@ public class MainController {
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public String homePage(ModelMap model) {
 		model.addAttribute("greeting", "Hello and welcome");
+                //TODO: Это тест что можно пропихнуть действие
 		return "welcome";
 	}
 

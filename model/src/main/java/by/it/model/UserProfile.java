@@ -15,6 +15,7 @@ public class UserProfile {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+        @Column(name="id", unique=true, nullable=false)
 	private long id;
 
 	@Column(name="TYPE", length=15, unique=true, nullable=false)

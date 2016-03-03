@@ -2,10 +2,8 @@ package by.it.service;
 
 import by.it.model.User;
 
-public interface UserService {
+public interface UserService extends DataService<User> {
 
-	User findById(int id);
-	
-	User findByUserName(String userName);
-	
+    User findByUserName(String userName);
+
 }

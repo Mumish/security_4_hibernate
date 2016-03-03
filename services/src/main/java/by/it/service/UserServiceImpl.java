@@ -9,17 +9,25 @@ import by.it.model.User;
 
 @Service("userService")
 @Transactional
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserDao dao;
+    @Autowired
+    private UserDao dao;
 
-	public User findById(int id) {
-		return dao.findById(id);
-	}
+    public User findById(long id) {
+        return dao.getByKey(id);
+    }
 
-	public User findByUserName(String userName) {
-		return dao.findByUserName(userName);
-	}
+    public User findByUserName(String userName) {
+        return dao.findByUserName(userName);
+    }
+
+    public void save(User user) {
+        dao.persist(user);
+    }
+
+    public void delete(User user) {
+        dao.delete(user);
+    }
 
 }

@@ -24,6 +24,7 @@ public class AuthenticationService implements UserDetailsService {
     private UserService userService;
 
     @Transactional(readOnly = true)
+    @Override
     public UserDetails loadUserByUsername(String userName)
             throws UsernameNotFoundException {
         User user = userService.findByUserName(userName);
@@ -38,7 +39,7 @@ public class AuthenticationService implements UserDetailsService {
 
 
     private List<GrantedAuthority> getGrantedAuthorities(User user) {
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
 
         for (UserProfile userProfile : user.getUserProfiles()) {
             System.out.println("UserProfile : " + userProfile);
