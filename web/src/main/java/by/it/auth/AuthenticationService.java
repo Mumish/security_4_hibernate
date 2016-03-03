@@ -23,9 +23,7 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
-    //TODO:в этом сервисе можно выставить true
-    //т.к. не должно быть модификации данных при просто аутентификации
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String userName)
             throws UsernameNotFoundException {
@@ -38,7 +36,6 @@ public class AuthenticationService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
                 State.ACTIVE.getState().equals(user.getState()), true, true, true, getGrantedAuthorities(user));
     }
-
 
     private List<GrantedAuthority> getGrantedAuthorities(User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
