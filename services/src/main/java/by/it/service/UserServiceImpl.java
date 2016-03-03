@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import by.it.dao.UserDao;
 import by.it.model.User;
+import by.it.model.UserProfile;
 
 @Service("userService")
 @Transactional
@@ -19,10 +20,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public User findByUserName(String userName) {
+        saveIt();
         return dao.findByUserName(userName);
     }
 
-    public void save(User user) {
+    public void persist(User user) {
         dao.persist(user);
     }
 
@@ -30,4 +32,24 @@ public class UserServiceImpl implements UserService {
         dao.delete(user);
     }
 
+    private void saveIt() {
+
+        User u = new User();
+
+        u.setUserName("UserName11");
+
+        u.setPassword("pass");
+
+        u.setFirstName("first1");
+
+        u.setLastName("last1");
+
+        u.setEmail("email1");
+
+        UserProfile prof = new UserProfile();
+        u.getUserProfiles().add(prof);
+
+        persist(u);
+//        saveOrUpdate(u);
+    }
 }

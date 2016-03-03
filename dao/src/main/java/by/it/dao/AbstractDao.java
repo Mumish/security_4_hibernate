@@ -31,6 +31,11 @@ public abstract class AbstractDao<PK extends Serializable, T> implements IBaseDa
         getSession().persist(entity);
     }
 
+//    @Override
+//    public void saveOrUpdate(T entity) {
+//        getSession().saveOrUpdate(entity);
+//    }
+
     @Override
     public void delete(T entity) {
         getSession().delete(entity);

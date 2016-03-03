@@ -4,7 +4,7 @@ public interface DataService<T> {
 
     T findById(long id);
 
-    void save(T t);
+    void persist(T t);
 
     void delete(T t);
 

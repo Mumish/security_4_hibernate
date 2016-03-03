@@ -4,6 +4,7 @@ import by.it.model.enums.State;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,136 +18,144 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="USER")
+@Table(name = "USER")
 public class User {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-        @Column(name="id", unique=true, nullable=false)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    private long id;
 
-	@Column(name="USER_NAME", unique=true, nullable=false)
-	private String userName;
-	
-	@Column(name="PASSWORD", nullable=false)
-	private String password;
-		
-	@Column(name="FIRST_NAME", nullable=false)
-	private String firstName;
+    @Column(name = "USER_NAME", unique = true, nullable = false)
+    private String userName;
 
-	@Column(name="LAST_NAME", nullable=false)
-	private String lastName;
+    @Column(name = "PASSWORD", nullable = false)
+    private String password;
 
-	@Column(name="EMAIL", nullable=false)
-	private String email;
+    @Column(name = "FIRST_NAME", nullable = false)
+    private String firstName;
 
-	@Column(name="STATE", nullable=false)
-	private String state= State.ACTIVE.getState();
+    @Column(name = "LAST_NAME", nullable = false)
+    private String lastName;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "USER_USER_PROFILE",
-             joinColumns = { @JoinColumn(name = "USER_ID") }, 
-             inverseJoinColumns = { @JoinColumn(name = "USER_PROFILE_ID") })
-	private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
+    @Column(name = "EMAIL", nullable = false)
+    private String email;
 
-	public long getId() {
-		return id;
-	}
+    @Column(name = "STATE", nullable = false)
+    private String state = State.ACTIVE.getState();
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    //TODO:была рекомендация не использовать cascade хибернейтовский
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_USER_PROFILE",
+            joinColumns = {
+                @JoinColumn(name = "USER_ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "USER_PROFILE_ID")})
+    private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
 
-	public String getUserName() {
-		return userName;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getState() {
-		return state;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public Set<UserProfile> getUserProfiles() {
-		return userProfiles;
-	}
+    public String getState() {
+        return state;
+    }
 
-	public void setUserProfiles(Set<UserProfile> userProfiles) {
-		this.userProfiles = userProfiles;
-	}
+    public void setState(String state) {
+        this.state = state;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int)id;
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-		return result;
-	}
+    public Set<UserProfile> getUserProfiles() {
+        return userProfiles;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof User))
-			return false;
-		User other = (User) obj;
-		if (id != other.id)
-			return false;
-		if (userName == null) {
-			if (other.userName != null)
-				return false;
-		} else if (!userName.equals(other.userName))
-			return false;
-		return true;
-	}
+    public void setUserProfiles(Set<UserProfile> userProfiles) {
+        this.userProfiles = userProfiles;
+    }
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + ", password=" + password
-				+ ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + ", state=" + state + "]";
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) id;
+        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        return result;
+    }
 
-	
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof User)) {
+            return false;
+        }
+        User other = (User) obj;
+        if (id != other.id) {
+            return false;
+        }
+        if (userName == null) {
+            if (other.userName != null) {
+                return false;
+            }
+        } else if (!userName.equals(other.userName)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", userName=" + userName + ", password=" + password
+                + ", firstName=" + firstName + ", lastName=" + lastName
+                + ", email=" + email + ", state=" + state + "]";
+    }
+
 }
