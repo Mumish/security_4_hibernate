@@ -21,8 +21,8 @@ import org.hibernate.annotations.Parameter;
 public class Account implements Serializable {
 
     @Id
-    @GenericGenerator(name = "clientId", strategy = "foreign", parameters = @Parameter(name = "property", value = "client"))
-    @GeneratedValue(generator = "clientId")
+    @GenericGenerator(name = "id", strategy = "foreign", parameters = @Parameter(name = "property", value = "user"))
+    @GeneratedValue(generator = "id")
     private long accountId;
     @Column
     private String num;
@@ -36,7 +36,7 @@ public class Account implements Serializable {
     //это подчиненная таблица
     @OneToOne(fetch = FetchType.LAZY)//@Fetch(value = FetchMode.SELECT) 
     @PrimaryKeyJoinColumn//(name = "idP",referencedColumnName = "idE1")
-    private Client client;
+    private User user;
 
     public long getAccountId() {
         return accountId;
@@ -78,12 +78,12 @@ public class Account implements Serializable {
         this.statusId = statusId;
     }
 
-    public Client getClient() {
-        return client;
+    public User getUser() {
+        return user;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

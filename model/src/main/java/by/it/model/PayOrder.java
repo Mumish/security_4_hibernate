@@ -13,15 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  *
  * @author Mumish
  */
 @Entity
-//TODO: кжш в прошлый раз как-то криво работал. Возвращал коллекцию с ИД но объекты налл
+//TODO: кэш в прошлый раз как-то криво работал. Возвращал коллекцию с ИД но объекты налл
 //@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PayOrder implements Serializable {
 
@@ -40,8 +38,8 @@ public class PayOrder implements Serializable {
 
     //это подчиненная таблица
     @ManyToOne(fetch = FetchType.LAZY)//@Fetch(value = FetchMode.SELECT) 
-    @JoinColumn(name = "F_clientId")//,referencedColumnName = "idE1")
-    private Client client;
+    @JoinColumn(name = "F_userId")//,referencedColumnName = "idE1")
+    private User user;
 
     //это главная таблица в связи
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
@@ -87,12 +85,12 @@ public class PayOrder implements Serializable {
         this.statusId = statusId;
     }
 
-    public Client getClient() {
-        return client;
+    public User getUser() {
+        return user;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Payment getPayment() {

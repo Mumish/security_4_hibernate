@@ -3,6 +3,7 @@ package by.it.model;
 import by.it.model.enums.State;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 
@@ -15,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -52,6 +55,16 @@ public class User {
             inverseJoinColumns = {
                 @JoinColumn(name = "USER_PROFILE_ID")})
     private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
+
+    //это главная таблица в связи
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Account account;
+    //это главная таблица в связи
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private CreditCard creditCard;
+    //это главная таблица в связи
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PayOrder> orders;
 
     public long getId() {
         return id;
@@ -115,6 +128,30 @@ public class User {
 
     public void setUserProfiles(Set<UserProfile> userProfiles) {
         this.userProfiles = userProfiles;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public CreditCard getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(CreditCard creditCard) {
+        this.creditCard = creditCard;
+    }
+
+    public List<PayOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<PayOrder> orders) {
+        this.orders = orders;
     }
 
     @Override

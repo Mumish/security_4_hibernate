@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -22,8 +21,8 @@ import org.hibernate.annotations.Parameter;
 public class CreditCard implements Serializable {
 
     @Id
-    @GenericGenerator(name = "clientId", strategy = "foreign", parameters = @Parameter(name = "property", value = "client"))
-    @GeneratedValue(generator = "clientId")
+    @GenericGenerator(name = "id", strategy = "foreign", parameters = @Parameter(name = "property", value = "user"))
+    @GeneratedValue(generator = "id")
     private long creditCardId;
     @Column
     private String num;
@@ -38,7 +37,7 @@ public class CreditCard implements Serializable {
     //это подчиненная таблица
     @OneToOne(fetch = FetchType.LAZY)//@Fetch(value = FetchMode.SELECT) 
     @PrimaryKeyJoinColumn//(name = "idP",referencedColumnName = "idE1")
-    private Client client;
+    private User user;
 
     public long getCreditCardId() {
         return creditCardId;
@@ -80,12 +79,12 @@ public class CreditCard implements Serializable {
         this.statusId = statusId;
     }
 
-    public Client getClient() {
-        return client;
+    public User getUser() {
+        return user;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
