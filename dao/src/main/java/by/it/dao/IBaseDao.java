@@ -1,6 +1,7 @@
 package by.it.dao;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface IBaseDao<PK extends Serializable, T> {
 
@@ -9,6 +10,9 @@ public interface IBaseDao<PK extends Serializable, T> {
     void persist(T entity);
 
     void delete(T t);
+    
+    List<T> getAll();
+    
 //TODO: что еще могло пригодиться
 //    void saveOrUpdate(T t);
 

@@ -3,6 +3,7 @@ package by.it.dao;
 import java.io.Serializable;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -35,10 +36,16 @@ public abstract class AbstractDao<PK extends Serializable, T> implements IBaseDa
 //    public void saveOrUpdate(T entity) {
 //        getSession().saveOrUpdate(entity);
 //    }
-
     @Override
     public void delete(T entity) {
         getSession().delete(entity);
+    }
+
+    @Override
+    public List<T> getAll() {
+
+        return createEntityCriteria().list();
+
     }
 
     protected Criteria createEntityCriteria() {

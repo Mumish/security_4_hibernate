@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns:jsp="http://java.sun.com/JSP/Page"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:s="http://www.springframework.org/tags/form"
+      xmlns:spring="http://www.springframework.org/tags"
+      xmlns="http://www.w3.org/1999/xhtml" version="2.0">
 
     <jsp:directive.page pageEncoding="UTF-8" contentType="text/html; UTF-8"/>
-    <head>
-        <title>Admin Persons page</title>
-    </head>
 
+    <head>
+        <title><spring:message code="page.person.title" arguments=" List"/></title>
+    </head>
+    <body>
+        <spring:message code="page.person.title" arguments=" List"/>
+    </body>
+
+    <div style="font-size: large">
+        <c:if test="${not empty message}">
+            INFO : ${message}
+        </c:if> <br/>
+    </div>
+    <div>
+        <c:if test="${empty persons}">EMPTY</c:if> <br/>
+
+        <c:forEach var="person1" items="${persons}" varStatus="status">
+            <br/>${status.count}. Name : ${person1.firstName} Surname: ${person1.lastName}
+        </c:forEach>
+    </div>
+
+    <div>
+        <input id="addPerson" type="button" value="Add person"/>
+    </div>
+    <div>
+        <input id="deletePerson" type="button" value="Delete person"/>
+    </div>
+    <br/>
+   
+    
+     <s:form id="personForm" name="person" style="display: none" modelAttribute="person" method="post">
+        <fieldset>
+            <label for="name">Surname</label>
+            <s:errors path="lastName" cssStyle="color: red" />
+            <s:input id="surName" type="text" value="" maxlength="20" path="lastName" placeholder="Person Surname"/><br/>
+            <s:input id="personId" type="hidden" path="id" value="" maxlength="3"/><br/>
+            <input id="personButton" type="submit" value=""/>
+        </fieldset>
+    </s:form>
+    
+    
 </html>

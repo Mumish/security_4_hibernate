@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import by.it.dao.UserDao;
 import by.it.model.User;
+import java.util.List;
 
 @Service("userService")
 @Transactional
@@ -28,6 +29,10 @@ public class UserServiceImpl implements UserService {
 
     public void delete(User user) {
         dao.delete(user);
+    }
+
+    public List<User> getAll() {
+        return dao.getAll();
     }
 
 }

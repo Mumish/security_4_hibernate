@@ -17,9 +17,14 @@ import by.it.model.User;
 import by.it.model.UserProfile;
 import by.it.model.enums.UserProfileType;
 import by.it.service.UserService;
+import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -34,42 +39,49 @@ public class PersonController {
 
     @RequestMapping(value = "/persons", method = RequestMethod.GET)
     public String mainPage(ModelMap model) {
-//        fillModel(model);
+        fillModel(model);
 //        return "persons/main";
         return "admin/persons";
     }
 
-//    @RequestMapping(value = "/add", method = RequestMethod.POST)
-//    public String addPerson(ModelMap model, @Valid Person person, BindingResult br) {
-//        if(!br.hasErrors()) {
-//            if (person != null) {
-//                person = personService.create(person);
-//                model.put("person", person);
-//            }
-//        }
-//        model.put("persons", personService.getPersons());
-//        return "persons/main";
-//    }
-//
-//    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-//    public String deletePerson(ModelMap model, Person person) {
-//        if (person != null) {
-//            personService.delete(person);
-//            model.put("message", "Person: " + person.getName() + " was deleted");
-//        }
-//        fillModel(model);
-//
-//        return "persons/main";
-//    }
-//    private void fillModel(ModelMap model) {
-//        List<Person> list = personService.getPersons();
-//        model.put("persons", list);
-//        Person person = new Person();
-//        if (list.size() > 1) {
-//            person = list.get(0);
-//        }
-//        model.put("person", person);
-//    }
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String adminPage(ModelMap model) {
+        model.addAttribute("user", getPrincipal());
+        return "admin";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addPerson(ModelMap model, @Valid User person, BindingResult br) {
+        if(!br.hasErrors()) {
+            if (person != null) {
+                userService.persist(person);
+                model.put("person", person);
+            }
+        }
+        model.put("persons", userService.getAll());
+        return "admin";
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public String deletePerson(ModelMap model, User person) {
+        if (person != null) {
+            userService.delete(person);
+            model.put("message", "Person: " + person.getUserName() + " was deleted");
+        }
+        fillModel(model);
+
+        return "admin";
+    }
+    
+    private void fillModel(ModelMap model) {
+        List<User> list = userService.getAll();
+        model.put("persons", list);
+        User person = new User();
+        if (list.size() > 0) {
+            person = list.get(0);
+        }
+        model.put("person", person);
+    }
     void createAdminIfNeed() {
 
         User u = userService.findById(1L);
@@ -98,5 +110,17 @@ public class PersonController {
             userService.persist(u);
         }
 
+    }
+    
+    String getPrincipal() {
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails) principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
     }
 }
