@@ -1,0 +1,29 @@
+<jsp:root xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:jsp="http://java.sun.com/JSP/Page"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:sec="http://www.springframework.org/security/tags"
+          version="2.0">
+    <style>
+        .logout {
+            margin: 10px;
+        }
+    </style>
+
+    <header class="clearfix">
+        <div class="headerClass">
+            Spring header
+        </div>
+        <div class="privateInfo">
+            <sec:authorize ifAnyGranted="WAY2HAVE_NOT_PHONE_USER, WAY2_UNCONFIRMED_USER">
+                <span>Hello, <sec:authentication property="principal.displayName"/></span>
+                <c:url var="logout" value="/logout"/>
+                <a class="logout" href="${logout}" id="logOutButton">Log Out</a>
+            </sec:authorize>
+        </div>
+
+    </header>
+
+</jsp:root>
+
+
+

@@ -27,24 +27,25 @@
         </c:forEach>
     </div>
 
-    <div>
-        <input id="addPerson" type="button" value="Add person"/>
-    </div>
-    <div>
-        <input id="deletePerson" type="button" value="Delete person"/>
-    </div>
-    <br/>
-   
-    
-     <s:form id="personForm" name="person" style="display: none" modelAttribute="person" method="post">
+
+
+    <c:url var="addUrl" value="/admin/add" />
+    <s:form id="personForm" name="person" style="display: yes" modelAttribute="person" method="post" action="${addUrl}">
         <fieldset>
             <label for="name">Surname</label>
             <s:errors path="lastName" cssStyle="color: red" />
             <s:input id="surName" type="text" value="" maxlength="20" path="lastName" placeholder="Person Surname"/><br/>
             <s:input id="personId" type="hidden" path="id" value="" maxlength="3"/><br/>
             <input id="personButton" type="submit" value=""/>
+            <div>
+                <input id="addPerson" type="submit" value="Add user"/>
+            </div>
+            <div>
+                <input id="deletePerson" type="button" value="Delete person"/>
+            </div>
+            <br/>
         </fieldset>
     </s:form>
-    
-    
+
+
 </html>

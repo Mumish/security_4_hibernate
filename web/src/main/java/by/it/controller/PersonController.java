@@ -34,8 +34,6 @@ public class PersonController {
 
     @Autowired
     private UserService userService;
-//    @Autowired
-//    private IPersonService personService;
 
     @RequestMapping(value = "/persons", method = RequestMethod.GET)
     public String mainPage(ModelMap model) {
