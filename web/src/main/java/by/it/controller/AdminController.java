@@ -11,9 +11,9 @@
  */
 package by.it.controller;
 
-//import by.it.academy.pojos.Person;
-//import by.it.academy.services.IPersonService;
+import by.it.model.PayOrder;
 import by.it.model.User;
+import by.it.service.PayOrderService;
 import by.it.service.UserService;
 import java.util.List;
 import javax.validation.Valid;
@@ -32,12 +32,19 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PayOrderService orderService;
 
     @RequestMapping(value = "/persons", method = RequestMethod.GET)
-    public String mainPage(ModelMap model) {
-        fillModel(model);
-//        return "persons/main";
+    public String personsPage(ModelMap model) {
+        fillPersonsModel(model);
         return "admin/persons";
+    }
+
+    @RequestMapping(value = "/orders", method = RequestMethod.GET)
+    public String ordersPage(ModelMap model) {
+        fillOrdersModel(model);
+        return "admin/orders";
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -58,18 +65,30 @@ public class AdminController {
         return "redirect:/admin/persons";
     }
 
+    @RequestMapping(value = "/orders/add", method = RequestMethod.POST)
+    public String addOrder(ModelMap model, @Valid User user, double price, BindingResult br) {
+        if (!br.hasErrors()) {
+            if (user != null && user.getId() > 0 && price > 0) {
+                orderService.saveNewPayOrder(user, price);
+                model.put("order", user);
+            }
+        }
+        model.put("orders", orderService.getAll());
+        return "redirect:/admin/orders";
+    }
+
     @RequestMapping(value = "/persons/delete", method = RequestMethod.POST)
     public String deletePerson(ModelMap model, User user) {
         if (user != null && user.getId() > 0) {
             userService.delete(user);
             model.put("message", "User: " + user.getUserName() + " was deleted");
         }
-        fillModel(model);
+        fillPersonsModel(model);
 
         return "redirect:/admin/persons";
     }
 
-    private void fillModel(ModelMap model) {
+    private void fillPersonsModel(ModelMap model) {
         List<User> list = userService.getAll();
         model.put("persons", list);
         User person = new User();
@@ -77,6 +96,16 @@ public class AdminController {
             person = list.get(0);
         }
         model.put("person", person);
+    }
+
+    private void fillOrdersModel(ModelMap model) {
+        List<PayOrder> list = orderService.getAll();
+        model.put("orders", list);
+        PayOrder order = new PayOrder();
+        if (list.size() > 0) {
+            order = list.get(0);
+        }
+        model.put("order", order);
     }
 
     void createAdminIfNeed() {

@@ -8,10 +8,10 @@
     <jsp:directive.page pageEncoding="UTF-8" contentType="text/html; UTF-8"/>
 
     <head>
-        <title><spring:message code="page.order.title" arguments=" List"/></title>
+        <title><spring:message code="page.person.title" arguments=" List"/></title>
     </head>
     <body>
-        <spring:message code="page.order.title" arguments=" List"/>
+        <spring:message code="page.person.title" arguments=" List"/>
     </body>
 
     <div style="font-size: large">
@@ -19,34 +19,15 @@
             INFO : ${message}
         </c:if> <br/>
     </div>
-    <div>
-        <c:if test="${empty orders}">EMPTY</c:if> <br/>
-
-        <c:forEach var="order1" items="${orders}" varStatus="status">
-            <br/>${status.count}. Name : ${order1.firstName} Surname: ${order1.lastName}
-        </c:forEach>
-    </div>
-
-
 
     <c:url var="addUrl" value="/admin/orders/add" />
     <s:form id="orderForm" name="order" style="display: yes" modelAttribute="order" method="post" action="${addUrl}">
         <fieldset>
-            <label for="name">First Name</label>
-            <s:errors path="firstName" cssStyle="color: red" />
-            <s:input id="firstName" type="text" value="" maxlength="20" path="firstName" placeholder="User FirstName"/><br/>
-            <label for="name">Last Name</label>
-            <s:errors path="lastName" cssStyle="color: red" />
-            <s:input id="lastName" type="text" value="" maxlength="20" path="lastName" placeholder="User LastName"/><br/>
-            <label for="name">UserName</label>
-            <s:errors path="userName" cssStyle="color: red" />
-            <s:input id="userName" type="text" value="us" maxlength="20" path="userName" placeholder="User UserName"/><br/>
-            <label for="name">Password</label>
-            <s:errors path="password" cssStyle="color: red" />
-            <s:input id="password" type="text" value="us" maxlength="20" path="password" placeholder="User password"/><br/>
-            <label for="name">email</label>
-            <s:errors path="email" cssStyle="color: red" />
-            <s:input id="email" type="text" value="" maxlength="20" path="email" placeholder="User email"/><br/>
+
+            <label for="price">price</label>
+            <s:errors path="price" cssStyle="color: red" />
+            <s:input id="price" type="text" value="" maxlength="20" path="price" placeholder="Order price"/><br/>
+
             <s:input id="orderId" type="hidden" path="id" value="0" maxlength="3"/><br/>
             <div>
                 <input id="addOrder" type="submit" value="Add order"/>
@@ -56,6 +37,59 @@
     </s:form>
 
 
+    <br/><br/>
+    <table id="orderTable">
+
+        <tr class="blue">
+            <td><label>№</label></td>
+            <td><label>клиент</label></td>
+            <td><label>номер</label></td>
+            <td><label>цена</label></td>
+            <td><label></label></td>
+            <td><label></label></td>
+        </tr>
+
+        <c:forEach var="order" items="${orders}" varStatus="iter">
+
+            <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
+                <td>
+
+                    ${iter.index+1}
+                </td>
+
+                <td>
+                    ${order.user}
+                </td>
+                <td>
+                    ${order.num}
+                </td>
+                <td>
+                    ${order.price}
+                </td>
+                <td>
+                    <c:url var="delUrl" value="/admin/orders/delete" />
+                    <s:form id="orderFormDel" name="order" style="display: yes" modelAttribute="order"  method="post" action="${delUrl}">
+                        <s:input id="firstName" type="hidden" value="${order.num}" maxlength="20" path="firstName" placeholder="User FirstName"/>
+                        <s:input id="lastName" type="hidden" value="${order.price}" maxlength="20" path="lastName" placeholder="User LastName"/>
+                        <s:input id="userName" type="hidden" value="${order.dateOpen}" maxlength="20" path="userName" placeholder="User UserName"/>
+                        <s:input id="personId" type="hidden" path="id" value="${order.id}" maxlength="3"/>
+                        <div>
+                            <input id="delOrder" type="submit" value="Удалить"/>
+                        </div>
+                    </s:form>
+                </td>
+                <td>
+                    <s:form method='get' action="" >
+                        <input type="button"
+                               onclick='top.location.href = "orders?${order.id}"'
+                               value="изменить"/>
+                    </s:form>
+                </td>
+            </tr>
+
+        </c:forEach>
+
+    </table>
 
 
 </html>
