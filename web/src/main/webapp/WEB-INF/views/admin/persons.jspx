@@ -19,17 +19,8 @@
             INFO : ${message}
         </c:if> <br/>
     </div>
-    <div>
-        <c:if test="${empty persons}">EMPTY</c:if> <br/>
 
-        <c:forEach var="person1" items="${persons}" varStatus="status">
-            <br/>${status.count}. Name : ${person1.firstName} Surname: ${person1.lastName}
-        </c:forEach>
-    </div>
-
-
-
-    <c:url var="addUrl" value="/admin/add" />
+    <c:url var="addUrl" value="/admin/persons/add" />
     <s:form id="personForm" name="person" style="display: yes" modelAttribute="person" method="post" action="${addUrl}">
         <fieldset>
             <label for="name">First Name</label>
@@ -56,6 +47,61 @@
     </s:form>
 
 
+    <br/><br/><br/><br/><br/>
+    <table id="userTable">
+
+        <tr class="blue">
+            <td><label>№</label></td>
+            <td><label>Ник</label></td>
+            <td><label>ФИО</label></td>
+            <td><label>емейл</label></td>
+            <td><label></label></td>
+            <td><label></label></td>
+        </tr>
+
+        <c:forEach var="person" items="${persons}" varStatus="iter">
+
+            <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
+                <td>
+
+                    ${iter.index+1}
+                </td>
+
+                <td>
+                    ${person.userName}
+                </td>
+                <td>
+                    ${person.firstName} ${person.lastName}
+                </td>
+                <td>
+                    ${person.email}
+                </td>
+                <td>
+                    <c:url var="delUrl" value="/admin/persons/delete" />
+                    <s:form id="personFormDel" name="person" style="display: yes" modelAttribute="person"  method="post" action="${delUrl}">
+                        <s:input id="firstName" type="hidden" value="${person.firstName}" maxlength="20" path="firstName" placeholder="User FirstName"/>
+                        <s:input id="lastName" type="hidden" value="${person.lastName}" maxlength="20" path="lastName" placeholder="User LastName"/>
+                        <s:input id="userName" type="hidden" value="${person.userName}" maxlength="20" path="userName" placeholder="User UserName"/>
+                        <s:input id="password" type="hidden" value="${person.password}" maxlength="20" path="password" placeholder="User password"/>
+                        <s:input id="email" type="hidden" value="${person.email}" maxlength="20" path="email" placeholder="User email"/>
+                        <s:input id="personId" type="hidden" path="id" value="${person.id}" maxlength="3"/>
+                        <div>
+                            <input id="delPerson" type="submit" value="Удалить"/>
+                        </div>
+                    </s:form>
+                </td>
+                <td>
+                    <s:form method='get' action="" >
+                        <input type="button"
+                               onclick='top.location.href = "persons?${person.id}"'
+                               value="изменить"/>
+                    </s:form>
+                </td>
+            </tr>
+
+        </c:forEach>
+
+    </table>
 
 
 </html>

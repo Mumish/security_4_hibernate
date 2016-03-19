@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class MainController {
 
     @Autowired
-    private PersonController personController;
+    private AdminController personController;
 
     @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
     public String homePage(ModelMap model) {

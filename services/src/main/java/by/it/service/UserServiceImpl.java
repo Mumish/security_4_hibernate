@@ -60,11 +60,10 @@ public class UserServiceImpl implements UserService {
 
             u.setEmail("admin@email.com");
 
-            UserProfile profAdmin = new UserProfile();
-            profAdmin.setType(UserProfileType.ADMIN.getType());
+            UserProfile profAdmin = getUserProfile(UserProfileType.ADMIN);
+
             u.getUserProfiles().add(profAdmin);
-            UserProfile profDba = new UserProfile();
-            profDba.setType(UserProfileType.DBA.getType());
+            UserProfile profDba = getUserProfile(UserProfileType.DBA);
             u.getUserProfiles().add(profDba);
 
             persist(u);
