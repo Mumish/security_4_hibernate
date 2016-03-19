@@ -21,6 +21,16 @@
             </sec:authorize>
         </div>
 
+        <c:url var="mainUrl" value="/" />
+        <form action="${mainUrl}" method="get" class="form-horizontal">
+            <div class="form-actions">
+                <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                    <input type="submit"
+                           class="btn btn-block btn-primary btn-default" value="To main page"/>
+                </sec:authorize>
+            </div>
+        </form>
+
     </header>
 
 </jsp:root>

@@ -13,11 +13,7 @@ package by.it.controller;
 
 //import by.it.academy.pojos.Person;
 //import by.it.academy.services.IPersonService;
-import by.it.model.Account;
-import by.it.model.CreditCard;
 import by.it.model.User;
-import by.it.model.UserProfile;
-import by.it.model.enums.UserProfileType;
 import by.it.service.UserService;
 import java.util.List;
 import javax.validation.Valid;
@@ -51,24 +47,15 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addPerson(ModelMap model, @Valid User person, BindingResult br) {
-        if(!br.hasErrors()) {
-            if (person != null) {
-                UserProfile prof = new UserProfile();
-                person.getUserProfiles().add(prof);
-                
-                CreditCard cred = new CreditCard();
-                Account acc = new Account();
-                
-                person.setAccount(acc);
-                person.setCreditCard(cred);
-                
-                userService.persist(person);
-                model.put("person", person);
+    public String addPerson(ModelMap model, @Valid User user, BindingResult br) {
+        if (!br.hasErrors()) {
+            if (user != null) {
+                userService.saveNewUser(user);
+                model.put("person", user);
             }
         }
         model.put("persons", userService.getAll());
-        return "admin";
+        return "redirect:/admin/persons";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -81,7 +68,7 @@ public class PersonController {
 
         return "admin";
     }
-    
+
     private void fillModel(ModelMap model) {
         List<User> list = userService.getAll();
         model.put("persons", list);
@@ -91,36 +78,11 @@ public class PersonController {
         }
         model.put("person", person);
     }
+
     void createAdminIfNeed() {
-
-        User u = userService.findById(1L);
-
-        if (u == null) {
-
-            u = new User();
-
-            u.setUserName("root");
-
-            u.setPassword("root");
-
-            u.setFirstName("admin_first_name");
-
-            u.setLastName("admin_last_name");
-
-            u.setEmail("admin@email.com");
-
-            UserProfile profAdmin = new UserProfile();
-            profAdmin.setType(UserProfileType.ADMIN.getType());
-            u.getUserProfiles().add(profAdmin);
-            UserProfile profDba = new UserProfile();
-            profDba.setType(UserProfileType.DBA.getType());
-            u.getUserProfiles().add(profDba);
-
-            userService.persist(u);
-        }
-
+        userService.createAdminIfNeed();
     }
-    
+
     String getPrincipal() {
         String userName = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -131,5 +93,15 @@ public class PersonController {
             userName = principal.toString();
         }
         return userName;
+    }
+
+    UserDetails getUserDetails() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            return (UserDetails) principal;
+        } else {
+            return null;
+        }
     }
 }

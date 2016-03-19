@@ -11,12 +11,12 @@
     </definition>
 
     <definition name="welcome" extends="default">
-        <put-attribute name="title" value="Welcome user"/>
+        <put-attribute name="title" value="Welcome anonimus"/>
         <put-attribute name="body" value="/WEB-INF/views/welcome.jspx"/>
     </definition>
 
     <definition name="admin" extends="default">
-        <put-attribute name="title" value="Persons Info"/>
+        <put-attribute name="title" value="Admin page"/>
         <put-attribute name="body" value="/WEB-INF/views/admin.jspx"/>
     </definition>
 
@@ -28,6 +28,11 @@
     <definition name="login" extends="default">
         <put-attribute name="title" value="Login page"/>
         <put-attribute name="body" value="/WEB-INF/views/login.jspx"/>
+    </definition>
+
+    <definition name="access-denied" extends="default">
+        <put-attribute name="title" value="Access denied"/>
+        <put-attribute name="body" value="/WEB-INF/views/access-denied.jspx"/>
     </definition>
 </tiles-definitions>
 

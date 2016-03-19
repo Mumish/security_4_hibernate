@@ -6,4 +6,8 @@ public interface UserService extends DataService<User> {
 
     User findByUserName(String userName);
 
+    void createAdminIfNeed();
+
+    void saveNewUser(User user);
+
 }
