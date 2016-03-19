@@ -13,6 +13,8 @@ package by.it.controller;
 
 //import by.it.academy.pojos.Person;
 //import by.it.academy.services.IPersonService;
+import by.it.model.Account;
+import by.it.model.CreditCard;
 import by.it.model.User;
 import by.it.model.UserProfile;
 import by.it.model.enums.UserProfileType;
@@ -52,6 +54,15 @@ public class PersonController {
     public String addPerson(ModelMap model, @Valid User person, BindingResult br) {
         if(!br.hasErrors()) {
             if (person != null) {
+                UserProfile prof = new UserProfile();
+                person.getUserProfiles().add(prof);
+                
+                CreditCard cred = new CreditCard();
+                Account acc = new Account();
+                
+                person.setAccount(acc);
+                person.setCreditCard(cred);
+                
                 userService.persist(person);
                 model.put("person", person);
             }

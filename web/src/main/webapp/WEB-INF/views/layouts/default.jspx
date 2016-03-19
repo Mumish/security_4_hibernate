@@ -20,8 +20,8 @@
 </head>
 <body>
 <div style="float: right;">
-    <a href="../person/persons.form?locale=ru" style="padding: 5px">RU</a>
-    <a href="../person/persons.form?locale=en" style="padding: 5px">EN</a>
+    <a href="?locale=ru" style="padding: 5px">RU</a>
+    <a href="?locale=en" style="padding: 5px">EN</a>
 </div>
 <tiles:insertAttribute name="header"/>
 <tiles:insertAttribute name="body"/>

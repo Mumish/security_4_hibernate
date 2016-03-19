@@ -10,7 +10,7 @@
         <put-attribute name="footer" value="/WEB-INF/views/common/footer.jspx"/>
     </definition>
 
-    <definition name="welcome!" extends="default">
+    <definition name="welcome" extends="default">
         <put-attribute name="title" value="Welcome user"/>
         <put-attribute name="body" value="/WEB-INF/views/welcome.jspx"/>
     </definition>

@@ -32,20 +32,30 @@
     <c:url var="addUrl" value="/admin/add" />
     <s:form id="personForm" name="person" style="display: yes" modelAttribute="person" method="post" action="${addUrl}">
         <fieldset>
-            <label for="name">Surname</label>
+            <label for="name">First Name</label>
+            <s:errors path="firstName" cssStyle="color: red" />
+            <s:input id="firstName" type="text" value="" maxlength="20" path="firstName" placeholder="User FirstName"/><br/>
+            <label for="name">Last Name</label>
             <s:errors path="lastName" cssStyle="color: red" />
-            <s:input id="surName" type="text" value="" maxlength="20" path="lastName" placeholder="Person Surname"/><br/>
-            <s:input id="personId" type="hidden" path="id" value="" maxlength="3"/><br/>
-            <input id="personButton" type="submit" value=""/>
+            <s:input id="lastName" type="text" value="" maxlength="20" path="lastName" placeholder="User LastName"/><br/>
+            <label for="name">UserName</label>
+            <s:errors path="userName" cssStyle="color: red" />
+            <s:input id="userName" type="text" value="us" maxlength="20" path="userName" placeholder="User UserName"/><br/>
+            <label for="name">Password</label>
+            <s:errors path="password" cssStyle="color: red" />
+            <s:input id="password" type="text" value="us" maxlength="20" path="password" placeholder="User password"/><br/>
+            <label for="name">email</label>
+            <s:errors path="email" cssStyle="color: red" />
+            <s:input id="email" type="text" value="" maxlength="20" path="email" placeholder="User email"/><br/>
+            <s:input id="personId" type="hidden" path="id" value="0" maxlength="3"/><br/>
             <div>
                 <input id="addPerson" type="submit" value="Add user"/>
-            </div>
-            <div>
-                <input id="deletePerson" type="button" value="Delete person"/>
             </div>
             <br/>
         </fieldset>
     </s:form>
+
+
 
 
 </html>
