@@ -17,6 +17,8 @@ public class PayOrderServiceImpl implements PayOrderService {
 
     @Autowired
     private PayOrderDao payOrderDao;
+    @Autowired
+    private UserService userService;
 
     public void persist(PayOrder payOrder) {
         payOrderDao.persist(payOrder);
@@ -30,13 +32,13 @@ public class PayOrderServiceImpl implements PayOrderService {
         return payOrderDao.getAll();
     }
 
-    public void saveNewPayOrder(User user, double price) {
+    public void saveNewPayOrder(PayOrder payOrder) {
 
-        PayOrder payOrder = new PayOrder();
+        User user = userService.findById(payOrder.getUser().getId());
+
         user.getOrders().add(payOrder);
 
         payOrder.setUser(user);
-        payOrder.setPrice(price);
         payOrder.setDateOpen(new Date());
         payOrder.setNum(getRandomNumb(5));
 

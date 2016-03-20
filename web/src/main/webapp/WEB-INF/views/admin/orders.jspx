@@ -21,14 +21,15 @@
     </div>
 
     <c:url var="addUrl" value="/admin/orders/add" />
+
+    <c:set var="stats" value="${persons}" />
     <s:form id="orderForm" name="order" style="display: yes" modelAttribute="order" method="post" action="${addUrl}">
         <fieldset>
 
             <label for="price">price</label>
-            <s:errors path="price" cssStyle="color: red" />
-            <s:input id="price" type="text" value="" maxlength="20" path="price" placeholder="Order price"/><br/>
+            <s:input id="price" type="text" value="25" maxlength="20" path="price" placeholder="Order price"/><br/>
+            <s:input id="userId" type="hidden" path="user.id" value="${stats.get(1).id}" maxlength="3"/><br/>
 
-            <s:input id="orderId" type="hidden" path="id" value="0" maxlength="3"/><br/>
             <div>
                 <input id="addOrder" type="submit" value="Add order"/>
             </div>

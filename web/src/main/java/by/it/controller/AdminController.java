@@ -44,6 +44,7 @@ public class AdminController {
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String ordersPage(ModelMap model) {
         fillOrdersModel(model);
+        fillPersonsModel(model);
         return "admin/orders";
     }
 
@@ -66,12 +67,12 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/orders/add", method = RequestMethod.POST)
-    public String addOrder(ModelMap model, @Valid User user, double price, BindingResult br) {
+    public String addOrder(ModelMap model, @Valid PayOrder payOrder, BindingResult br) {
         if (!br.hasErrors()) {
-            if (user != null && user.getId() > 0 && price > 0) {
-                orderService.saveNewPayOrder(user, price);
-                model.put("order", user);
-            }
+//            if (user != null && user.getId() > 0 && price > 0) {
+//                orderService.saveNewPayOrder(user, price);
+//                model.put("order", user);
+//            }
         }
         model.put("orders", orderService.getAll());
         return "redirect:/admin/orders";
