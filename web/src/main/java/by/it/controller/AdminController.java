@@ -69,10 +69,10 @@ public class AdminController {
     @RequestMapping(value = "/orders/add", method = RequestMethod.POST)
     public String addOrder(ModelMap model, @Valid PayOrder payOrder, BindingResult br) {
         if (!br.hasErrors()) {
-//            if (user != null && user.getId() > 0 && price > 0) {
-//                orderService.saveNewPayOrder(user, price);
-//                model.put("order", user);
-//            }
+            if (payOrder != null && payOrder.getUser().getId() > 0 && payOrder.getPrice() > 0) {
+                orderService.saveNewPayOrder(payOrder);
+                model.put("order", payOrder);
+            }
         }
         model.put("orders", orderService.getAll());
         return "redirect:/admin/orders";
@@ -103,6 +103,7 @@ public class AdminController {
         List<PayOrder> list = orderService.getAll();
         model.put("orders", list);
         PayOrder order = new PayOrder();
+//        order.setUser(new User());
         if (list.size() > 0) {
             order = list.get(0);
         }

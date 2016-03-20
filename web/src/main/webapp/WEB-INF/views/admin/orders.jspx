@@ -22,16 +22,29 @@
 
     <c:url var="addUrl" value="/admin/orders/add" />
 
-    <c:set var="stats" value="${persons}" />
     <s:form id="orderForm" name="order" style="display: yes" modelAttribute="order" method="post" action="${addUrl}">
         <fieldset>
 
             <label for="price">price</label>
             <s:input id="price" type="text" value="25" maxlength="20" path="price" placeholder="Order price"/><br/>
-            <s:input id="userId" type="hidden" path="user.id" value="${stats.get(1).id}" maxlength="3"/><br/>
+            <s:input id="userId" type="hidden" path="user.id" value="${selectedUser}"/><br/>
+
+            <select  id="selectedUser" name="selectedUser">
+                <c:forEach var="client" items="${persons}" varStatus="iter">
+                    <c:choose> 
+                        <c:when test="${client.id eq selectedContract.idClient.id}">
+                            <option value="${client.id}" selected="${client.id}">${client.firstName} ${client.lastName}</option>
+                        </c:when>
+                        <c:otherwise> 
+                            <option value="${client.id}" >${client.firstName} ${client.lastName}</option>
+                        </c:otherwise>
+
+                    </c:choose>
+                </c:forEach>
+            </select>
 
             <div>
-                <input id="addOrder" type="submit" value="Add order"/>
+                <input id="addOrder" type="submit" value="Создать"/>
             </div>
             <br/>
         </fieldset>
@@ -44,7 +57,7 @@
         <tr class="blue">
             <td><label>№</label></td>
             <td><label>клиент</label></td>
-            <td><label>номер</label></td>
+            <td><label>номер заказа</label></td>
             <td><label>цена</label></td>
             <td><label></label></td>
             <td><label></label></td>
@@ -59,7 +72,7 @@
                 </td>
 
                 <td>
-                    ${order.user}
+                    ${order.user.firstName} ${order.user.lastName}
                 </td>
                 <td>
                     ${order.num}
@@ -70,10 +83,7 @@
                 <td>
                     <c:url var="delUrl" value="/admin/orders/delete" />
                     <s:form id="orderFormDel" name="order" style="display: yes" modelAttribute="order"  method="post" action="${delUrl}">
-                        <s:input id="firstName" type="hidden" value="${order.num}" maxlength="20" path="firstName" placeholder="User FirstName"/>
-                        <s:input id="lastName" type="hidden" value="${order.price}" maxlength="20" path="lastName" placeholder="User LastName"/>
-                        <s:input id="userName" type="hidden" value="${order.dateOpen}" maxlength="20" path="userName" placeholder="User UserName"/>
-                        <s:input id="personId" type="hidden" path="id" value="${order.id}" maxlength="3"/>
+
                         <div>
                             <input id="delOrder" type="submit" value="Удалить"/>
                         </div>

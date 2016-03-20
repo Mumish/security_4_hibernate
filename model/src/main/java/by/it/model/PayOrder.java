@@ -37,7 +37,7 @@ public class PayOrder implements Serializable {
     private int statusId;
 
     //это подчиненная таблица
-    @ManyToOne(fetch = FetchType.LAZY)//@Fetch(value = FetchMode.SELECT) 
+    @ManyToOne(fetch = FetchType.EAGER)//@Fetch(value = FetchMode.SELECT) 
     @JoinColumn(name = "F_userId")//,referencedColumnName = "idE1")
     private User user;
 
