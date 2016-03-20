@@ -25,23 +25,11 @@
     <s:form id="orderForm" name="order" style="display: yes" modelAttribute="order" method="post" action="${addUrl}">
         <fieldset>
 
+
             <label for="price">price</label>
             <s:input id="price" type="text" value="25" maxlength="20" path="price" placeholder="Order price"/><br/>
-            <s:input id="userId" type="hidden" path="user.id" value="${selectedUser}"/><br/>
 
-            <select  id="selectedUser" name="selectedUser">
-                <c:forEach var="client" items="${persons}" varStatus="iter">
-                    <c:choose> 
-                        <c:when test="${client.id eq selectedContract.idClient.id}">
-                            <option value="${client.id}" selected="${client.id}">${client.firstName} ${client.lastName}</option>
-                        </c:when>
-                        <c:otherwise> 
-                            <option value="${client.id}" >${client.firstName} ${client.lastName}</option>
-                        </c:otherwise>
-
-                    </c:choose>
-                </c:forEach>
-            </select>
+            <s:select path="user.id" items="${persons}" itemValue="id" itemLabel="userName"/>
 
             <div>
                 <input id="addOrder" type="submit" value="Создать"/>

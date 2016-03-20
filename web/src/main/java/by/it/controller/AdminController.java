@@ -16,6 +16,7 @@ import by.it.model.User;
 import by.it.service.PayOrderService;
 import by.it.service.UserService;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +35,9 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private PayOrderService orderService;
+
+    @Autowired
+    private HttpServletRequest context;
 
     @RequestMapping(value = "/persons", method = RequestMethod.GET)
     public String personsPage(ModelMap model) {
@@ -68,6 +72,7 @@ public class AdminController {
 
     @RequestMapping(value = "/orders/add", method = RequestMethod.POST)
     public String addOrder(ModelMap model, @Valid PayOrder payOrder, BindingResult br) {
+        Long userId = (Long) context.getAttribute("selectedUser");
         if (!br.hasErrors()) {
             if (payOrder != null && payOrder.getUser().getId() > 0 && payOrder.getPrice() > 0) {
                 orderService.saveNewPayOrder(payOrder);
