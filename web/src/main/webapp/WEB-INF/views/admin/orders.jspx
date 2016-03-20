@@ -25,12 +25,14 @@
     <s:form id="orderForm" name="order" style="display: yes" modelAttribute="order" method="post" action="${addUrl}">
         <fieldset>
 
-
             <label for="price">price</label>
             <s:input id="price" type="text" value="25" maxlength="20" path="price" placeholder="Order price"/><br/>
-
-            <s:select path="user.id" items="${persons}" itemValue="id" itemLabel="userName"/>
-
+            <label for="userId">User</label>
+            <s:select id="userId" path="user.id">
+                <c:forEach var="theUser" items="${persons}">
+                    <s:option value="${theUser.id}"><c:out value="${theUser.lastName} ${theUser.firstName}"/></s:option>
+                </c:forEach>
+            </s:select>
             <div>
                 <input id="addOrder" type="submit" value="Создать"/>
             </div>
@@ -71,11 +73,16 @@
                 <td>
                     <c:url var="delUrl" value="/admin/orders/delete" />
                     <s:form id="orderFormDel" name="order" style="display: yes" modelAttribute="order"  method="post" action="${delUrl}">
-
+                        
+                        <s:input id="num" type="hidden" value="${order.num}" maxlength="20" path="num" placeholder="User password"/>
+                        <s:input id="price" type="hidden" value="${order.price}" maxlength="20" path="price" placeholder="User email"/>
+                        <s:input id="personId" type="hidden" path="id" value="${order.id}" maxlength="3"/>
                         <div>
                             <input id="delOrder" type="submit" value="Удалить"/>
                         </div>
                     </s:form>
+
+
                 </td>
                 <td>
                     <s:form method='get' action="" >

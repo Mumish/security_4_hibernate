@@ -15,15 +15,20 @@ import by.it.model.PayOrder;
 import by.it.model.User;
 import by.it.service.PayOrderService;
 import by.it.service.UserService;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -38,6 +43,13 @@ public class AdminController {
 
     @Autowired
     private HttpServletRequest context;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        sdf.setLenient(true);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+    }
 
     @RequestMapping(value = "/persons", method = RequestMethod.GET)
     public String personsPage(ModelMap model) {
@@ -72,7 +84,6 @@ public class AdminController {
 
     @RequestMapping(value = "/orders/add", method = RequestMethod.POST)
     public String addOrder(ModelMap model, @Valid PayOrder payOrder, BindingResult br) {
-        Long userId = (Long) context.getAttribute("selectedUser");
         if (!br.hasErrors()) {
             if (payOrder != null && payOrder.getUser().getId() > 0 && payOrder.getPrice() > 0) {
                 orderService.saveNewPayOrder(payOrder);
@@ -92,6 +103,17 @@ public class AdminController {
         fillPersonsModel(model);
 
         return "redirect:/admin/persons";
+    }
+
+    @RequestMapping(value = "/orders/delete", method = RequestMethod.POST)
+    public String deletePerson(ModelMap model, PayOrder order) {
+        if (order != null && order.getId() > 0) {
+            orderService.delete(order);
+            model.put("message", "Order: " + order.getNum() + " was deleted");
+        }
+        fillOrdersModel(model);
+
+        return "redirect:/admin/orders";
     }
 
     private void fillPersonsModel(ModelMap model) {
