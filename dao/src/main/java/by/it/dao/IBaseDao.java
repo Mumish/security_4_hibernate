@@ -14,7 +14,7 @@ public interface IBaseDao<PK extends Serializable, T> {
     List<T> getAll();
     
 //TODO: что еще могло пригодиться
-//    void saveOrUpdate(T t);
+    void saveOrUpdate(T t);
 
 //
 //    T get(Serializable id) ;

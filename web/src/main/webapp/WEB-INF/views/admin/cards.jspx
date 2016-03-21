@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:jsp="http://java.sun.com/JSP/Page"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:s="http://www.springframework.org/tags/form"
+      xmlns:spring="http://www.springframework.org/tags"
+      xmlns="http://www.w3.org/1999/xhtml" version="2.0">
+
+    <jsp:directive.page pageEncoding="UTF-8" contentType="text/html; UTF-8"/>
+
+    <head>
+        <title><spring:message code="page.person.title" arguments=" List"/></title>
+    </head>
+    <body>
+        <spring:message code="page.person.title" arguments=" List"/>
+    </body>
+
+    <div style="font-size: large">
+        <c:if test="${not empty message}">
+            INFO : ${message}
+        </c:if> <br/>
+    </div>
+
+    <c:url var="addUrl" value="/admin/cards/add" />
+
+
+    <br/><br/>
+    <table id="mayLockCardsTable">
+
+        <tr class="blue">
+            <td><label>№</label></td>
+            <td><label>клиент</label></td>
+            <td><label>номер кредитки</label></td>
+            <td><label>баланс</label></td>
+            <td><label></label></td>
+            <td><label></label></td>
+        </tr>
+
+        <c:forEach var="card" items="${forLockCards}" varStatus="iter">
+
+            <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
+                <td>
+
+                    ${iter.index+1}
+                </td>
+
+                <td>
+                    ${card.user.firstName} ${card.user.lastName}
+                </td>
+                <td>
+                    ${card.num}
+                </td>
+                <td>
+                    ${card.balance}
+                </td>
+                <td>
+                    <c:url var="lockUrl" value="/admin/cards/lock" />
+                    <s:form id="cardFormDel" name="card" style="display: yes" modelAttribute="card"  method="post" action="${lockUrl}">
+
+                        <s:input id="num" type="hidden" value="${card.num}" maxlength="20" path="num" placeholder="User password"/>
+                        <s:input id="balance" type="hidden" value="${card.balance}" maxlength="20" path="balance" placeholder="User email"/>
+                        <s:input id="statusId" type="hidden" value="${card.statusId}" maxlength="20" path="statusId" placeholder="User email"/>
+                        <s:input id="creditCardId" type="hidden" path="creditCardId" value="${card.creditCardId}" maxlength="3"/>
+                        <div>
+                            <input id="lockCard" type="submit" value="Заблокировать"/>
+                        </div>
+
+                    </s:form>
+
+
+                </td>
+                <td>
+                </td>
+            </tr>
+
+        </c:forEach>
+
+    </table>
+    <br/><br/>
+    <table id="lockedCardsTable">
+
+        <tr class="blue">
+            <td><label>№</label></td>
+            <td><label>клиент</label></td>
+            <td><label>номер кредитки</label></td>
+            <td><label>баланс</label></td>
+            <td><label></label></td>
+            <td><label></label></td>
+        </tr>
+
+        <c:forEach var="card" items="${lockedCards}" varStatus="iter">
+
+            <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
+                <td>
+
+                    ${iter.index+1}
+                </td>
+
+                <td>
+                    ${card.user.firstName} ${card.user.lastName}
+                </td>
+                <td>
+                    ${card.num}
+                </td>
+                <td>
+                    ${card.balance}
+                </td>
+                <td>
+                    <c:url var="unlockUrl" value="/admin/cards/unlock" />
+                    <s:form id="cardFormDel" name="card" style="display: yes" modelAttribute="card"  method="post" action="${unlockUrl}">
+
+                        <s:input id="num" type="hidden" value="${card.num}" maxlength="20" path="num" placeholder="User password"/>
+                        <s:input id="balance" type="hidden" value="${card.balance}" maxlength="20" path="balance" placeholder="User email"/>
+                        <s:input id="statusId" type="hidden" value="${card.statusId}" maxlength="20" path="statusId" placeholder="User email"/>
+                        <s:input id="creditCardId" type="hidden" path="creditCardId" value="${card.creditCardId}" maxlength="3"/>
+                        <div>
+                            <input id="unlockCard" type="submit" value="Разблокировать"/>
+                        </div>
+
+                    </s:form>
+
+
+                </td>
+                <td>
+                </td>
+            </tr>
+
+        </c:forEach>
+
+    </table>
+</html>

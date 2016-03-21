@@ -29,6 +29,11 @@
         <put-attribute name="title" value="Orders Info"/>
         <put-attribute name="body" value="/WEB-INF/views/admin/orders.jspx"/>
     </definition>
+    
+    <definition name="admin/cards" extends="default">
+        <put-attribute name="title" value="Cards Info"/>
+        <put-attribute name="body" value="/WEB-INF/views/admin/cards.jspx"/>
+    </definition>
 
     <definition name="login" extends="default">
         <put-attribute name="title" value="Login page"/>

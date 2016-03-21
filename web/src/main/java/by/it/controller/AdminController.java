@@ -11,24 +11,20 @@
  */
 package by.it.controller;
 
+import by.it.model.CreditCard;
 import by.it.model.PayOrder;
 import by.it.model.User;
+import by.it.service.CreditCardService;
 import by.it.service.PayOrderService;
 import by.it.service.UserService;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -40,17 +36,16 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private PayOrderService orderService;
-
     @Autowired
-    private HttpServletRequest context;
+    private CreditCardService cardsService;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        sdf.setLenient(true);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-    }
-
+    //TODO:такого рода код должне помогать мапить поля даты, но это недопиленный кусок
+//    @InitBinder
+//    public void initBinder(WebDataBinder binder) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+//        sdf.setLenient(true);а
+//        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+//    }
     @RequestMapping(value = "/persons", method = RequestMethod.GET)
     public String personsPage(ModelMap model) {
         fillPersonsModel(model);
@@ -62,6 +57,13 @@ public class AdminController {
         fillOrdersModel(model);
         fillPersonsModel(model);
         return "admin/orders";
+    }
+
+    @RequestMapping(value = "/cards", method = RequestMethod.GET)
+    public String cardsPage(ModelMap model) {
+        fillPersonsModel(model);
+        fillCardsModel(model);
+        return "admin/cards";
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -92,6 +94,28 @@ public class AdminController {
         }
         model.put("orders", orderService.getAll());
         return "redirect:/admin/orders";
+    }
+
+    @RequestMapping(value = "/cards/lock", method = RequestMethod.POST)
+    public String lockCard(ModelMap model, @Valid CreditCard creditCard, BindingResult br) {
+        if (creditCard != null && creditCard.getCreditCardId() > 0) {
+            cardsService.lockCard(creditCard);
+            model.put("message", "Order: " + creditCard.getNum() + " was locked");
+        }
+        fillOrdersModel(model);
+
+        return "redirect:/admin/cards";
+    }
+
+    @RequestMapping(value = "/cards/unlock", method = RequestMethod.POST)
+    public String unlockCard(ModelMap model, @Valid CreditCard creditCard, BindingResult br) {
+        if (creditCard != null && creditCard.getCreditCardId() > 0) {
+            cardsService.unlockCard(creditCard);
+            model.put("message", "Order: " + creditCard.getNum() + " was unlocked");
+        }
+        fillOrdersModel(model);
+
+        return "redirect:/admin/cards";
     }
 
     @RequestMapping(value = "/persons/delete", method = RequestMethod.POST)
@@ -135,6 +159,21 @@ public class AdminController {
             order = list.get(0);
         }
         model.put("order", order);
+    }
+
+    private void fillCardsModel(ModelMap model) {
+        List<CreditCard> list = cardsService.lockedCardList();
+        model.put("lockedCards", list);
+        CreditCard card = new CreditCard();
+//        order.setUser(new User());
+        if (list.size() > 0) {
+            card = list.get(0);
+        }
+        model.put("card", card);
+        
+        list = cardsService.forLockCardList();
+        model.put("forLockCards", list);
+
     }
 
     void createAdminIfNeed() {

@@ -91,11 +91,6 @@
                     </s:form>
                 </td>
                 <td>
-                    <s:form method='get' action="" >
-                        <input type="button"
-                               onclick='top.location.href = "persons?${person.id}"'
-                               value="изменить"/>
-                    </s:form>
                 </td>
             </tr>
 

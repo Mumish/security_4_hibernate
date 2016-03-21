@@ -10,6 +10,8 @@ public interface DataService<T> {
 
     void persist(T t);
 
+    void saveOrUpdate(T t);
+
     void delete(T t);
 
 }

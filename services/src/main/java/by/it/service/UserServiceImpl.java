@@ -35,6 +35,10 @@ public class UserServiceImpl implements UserService {
         userDao.persist(user);
     }
 
+    public void saveOrUpdate(User user) {
+        userDao.saveOrUpdate(user);
+    }
+
     public void delete(User user) {
         userDao.delete(user);
     }

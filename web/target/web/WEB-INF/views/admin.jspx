@@ -23,5 +23,12 @@
                        class="btn btn-block btn-primary btn-default" value="Orders managment"/>
             </div>
         </form>
+        <c:url var="cardsUrl" value="admin/cards" />
+        <form action="${cardsUrl}" method="get" class="form-horizontal">
+            <div class="form-actions">
+                <input type="submit"
+                       class="btn btn-block btn-primary btn-default" value="Cards managment"/>
+            </div>
+        </form>
     </body>
 </html>

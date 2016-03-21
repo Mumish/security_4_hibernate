@@ -35,7 +35,7 @@ public class CreditCard implements Serializable {
     private int statusId;
 
     //это подчиненная таблица
-    @OneToOne(fetch = FetchType.LAZY)//@Fetch(value = FetchMode.SELECT) 
+    @OneToOne(fetch = FetchType.EAGER)//@Fetch(value = FetchMode.SELECT) 
     @PrimaryKeyJoinColumn//(name = "idP",referencedColumnName = "idE1")
     private User user;
 

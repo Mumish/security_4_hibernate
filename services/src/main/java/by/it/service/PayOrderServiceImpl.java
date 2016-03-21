@@ -24,6 +24,10 @@ public class PayOrderServiceImpl implements PayOrderService {
         payOrderDao.persist(payOrder);
     }
 
+    public void saveOrUpdate(PayOrder payOrder) {
+        payOrderDao.saveOrUpdate(payOrder);
+    }
+
     public void delete(PayOrder payOrder) {
         payOrderDao.delete(payOrder);
     }
