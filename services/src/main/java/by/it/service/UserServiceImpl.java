@@ -1,5 +1,7 @@
 package by.it.service;
 
+import by.it.dao.PayOrderDao;
+import by.it.dao.PaymentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,9 +10,12 @@ import by.it.dao.UserDao;
 import by.it.dao.UserProfileDao;
 import by.it.model.Account;
 import by.it.model.CreditCard;
+import by.it.model.PayOrder;
+import by.it.model.Payment;
 import by.it.model.User;
 import by.it.model.UserProfile;
 import by.it.model.enums.UserProfileType;
+import java.util.Date;
 import java.util.List;
 
 @Service("userService")
@@ -22,6 +27,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserProfileDao profileDao;
+    @Autowired
+    private PayOrderDao orderDao;
+    @Autowired
+    private PaymentDao paymentDao;
 
     public User findById(long id) {
         return userDao.getByKey(id);
@@ -104,5 +113,21 @@ public class UserServiceImpl implements UserService {
         }
 
         return profile;
+    }
+
+    public void payOrder(PayOrder payOrder) {
+
+        Payment pay = new Payment();
+
+//        pay.setPaymentId(payOrder.getId());
+        pay.setAmount(payOrder.getPrice());
+        pay.setDatePayment(new Date());
+        pay.setOrder(payOrder);
+        payOrder.setPayment(pay);
+        paymentDao.persist(pay);
+
+        User us = findById(payOrder.getUser().getId());
+        us.getCreditCard().setBalance(us.getCreditCard().getBalance() - payOrder.getPrice());
+        persist(us);
     }
 }

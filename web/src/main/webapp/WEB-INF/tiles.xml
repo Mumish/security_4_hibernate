@@ -15,6 +15,11 @@
         <put-attribute name="body" value="/WEB-INF/views/welcome.jspx"/>
     </definition>
 
+    <definition name="user" extends="default">
+        <put-attribute name="title" value="Admin page"/>
+        <put-attribute name="body" value="/WEB-INF/views/user.jspx"/>
+    </definition>
+    
     <definition name="admin" extends="default">
         <put-attribute name="title" value="Admin page"/>
         <put-attribute name="body" value="/WEB-INF/views/admin.jspx"/>

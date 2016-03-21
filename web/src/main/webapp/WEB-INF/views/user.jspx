@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:jsp="http://java.sun.com/JSP/Page"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:s="http://www.springframework.org/tags/form"
+      xmlns:spring="http://www.springframework.org/tags"
+      xmlns="http://www.w3.org/1999/xhtml" version="2.0">
+
+<jsp:directive.page pageEncoding="UTF-8" contentType="text/html; UTF-8"/>
+<head>
+	<title>User page</title>
+</head>
+<body>
+	Dear <strong>${userName}</strong>, Welcome to User Page.
+	<c:url var="logout" value="/logout"/>
+	<a href="${logout}">Logout</a>
+        
+        
+        
+    <br/><br/>
+    <table id="orderTable">
+
+        <tr class="blue">
+            <td><label>№</label></td>
+            <td><label>клиент</label></td>
+            <td><label>номер заказа</label></td>
+            <td><label>цена</label></td>
+            <td><label></label></td>
+            <td><label></label></td>
+        </tr>
+
+        <c:forEach var="order" items="${user.orders}" varStatus="iter">
+
+            <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
+                <td>
+
+                    ${iter.index+1}
+                </td>
+
+                <td>
+                    ${order.user.firstName} ${order.user.lastName}
+                </td>
+                <td>
+                    ${order.num}
+                </td>
+                <td>
+                    ${order.price}
+                </td>
+                <td>
+                    <c:url var="payUrl" value="/user/pay" />
+                    <s:form id="orderFormDel" name="order" style="display: yes" modelAttribute="order"  method="post" action="${payUrl}">
+                        
+                        <s:input id="personId" type="hidden" path="id" value="${order.id}" maxlength="3"/>
+                        <div>
+                            <input id="delOrder" type="submit" value="Оплатить"/>
+                        </div>
+                    </s:form>
+
+
+                </td>
+                <td>
+                </td>
+            </tr>
+
+        </c:forEach>
+
+    </table>
+</body>
+</html>

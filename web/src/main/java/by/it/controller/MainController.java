@@ -40,12 +40,6 @@ public class MainController {
         return direction;
     }
 
-    @RequestMapping(value = "/db", method = RequestMethod.GET)
-    public String dbaPage(ModelMap model) {
-        model.addAttribute("user", personController.getPrincipal());
-        return "dba";
-    }
-
     @RequestMapping(value = "/access_denied", method = RequestMethod.GET)
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("user", personController.getPrincipal());
