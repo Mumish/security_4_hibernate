@@ -21,7 +21,6 @@
     </div>
 
     <c:url var="addUrl" value="/admin/orders/add" />
-
     <s:form id="orderForm" name="order" style="display: yes" modelAttribute="order" method="post" action="${addUrl}">
         <fieldset>
 

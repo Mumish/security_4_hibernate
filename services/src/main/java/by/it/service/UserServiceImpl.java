@@ -119,8 +119,6 @@ public class UserServiceImpl implements UserService {
 
         Payment pay = new Payment();
 
-//        pay.setPaymentId(payOrder.getId());
-        pay.setAmount(payOrder.getPrice());
         pay.setDatePayment(new Date());
         pay.setOrder(payOrder);
         payOrder.setPayment(pay);
@@ -129,5 +127,15 @@ public class UserServiceImpl implements UserService {
         User us = findById(payOrder.getUser().getId());
         us.getCreditCard().setBalance(us.getCreditCard().getBalance() - payOrder.getPrice());
         persist(us);
+    }
+
+    public void transfer(PayOrder payOrder) {
+
+        User usSource = findById(payOrder.getId());
+        usSource.getCreditCard().setBalance(usSource.getCreditCard().getBalance() - payOrder.getPrice());
+        persist(usSource);
+        User usDest = findById(payOrder.getUser().getId());
+        usSource.getAccount().setBalance(usSource.getAccount().getBalance() + payOrder.getPrice());
+        persist(usDest);
     }
 }

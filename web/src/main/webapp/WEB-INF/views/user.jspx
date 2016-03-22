@@ -5,64 +5,185 @@
       xmlns:spring="http://www.springframework.org/tags"
       xmlns="http://www.w3.org/1999/xhtml" version="2.0">
 
-<jsp:directive.page pageEncoding="UTF-8" contentType="text/html; UTF-8"/>
-<head>
-	<title>User page</title>
-</head>
-<body>
-	Dear <strong>${userName}</strong>, Welcome to User Page.
-	<c:url var="logout" value="/logout"/>
-	<a href="${logout}">Logout</a>
-        
-        
-        
-    <br/><br/>
-    <table id="orderTable">
-
-        <tr class="blue">
-            <td><label>№</label></td>
-            <td><label>клиент</label></td>
-            <td><label>номер заказа</label></td>
-            <td><label>цена</label></td>
-            <td><label></label></td>
-            <td><label></label></td>
-        </tr>
-
-        <c:forEach var="order" items="${user.orders}" varStatus="iter">
-
-            <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
-                <td>
-
-                    ${iter.index+1}
-                </td>
-
-                <td>
-                    ${order.user.firstName} ${order.user.lastName}
-                </td>
-                <td>
-                    ${order.num}
-                </td>
-                <td>
-                    ${order.price}
-                </td>
-                <td>
-                    <c:url var="payUrl" value="/user/pay" />
-                    <s:form id="orderFormDel" name="order" style="display: yes" modelAttribute="order"  method="post" action="${payUrl}">
-                        
-                        <s:input id="personId" type="hidden" path="id" value="${order.id}" maxlength="3"/>
-                        <div>
-                            <input id="delOrder" type="submit" value="Оплатить"/>
-                        </div>
-                    </s:form>
+    <jsp:directive.page pageEncoding="UTF-8" contentType="text/html; UTF-8"/>
+    <head>
+        <title>User page</title>
+    </head>
+    <body>
+        Dear <strong>${userName}</strong>, Welcome to User Page.
+        <c:url var="logout" value="/logout"/>
+        <a href="${logout}">Logout</a><br/>
 
 
-                </td>
-                <td>
-                </td>
+        <label>Кредитная карта:</label><br/>
+        <label>№ ${user.creditCard.num}</label><br/>
+        <label>баланс ${user.creditCard.balance}</label><br/>
+        <label>дата открытия ${user.creditCard.dateOpen}</label><br/>
+        <label>статус
+
+            <c:if test="${user.creditCard.statusId eq 0}">
+                Действительна
+            </c:if>
+            <c:if test="${user.creditCard.statusId eq 1}">
+                Заблокирована администратором
+            </c:if>
+            <c:if test="${user.creditCard.statusId eq 2}">
+                Заблокирована пользователем
+            </c:if>
+        </label><br/>
+
+        <c:if test="${user.creditCard.statusId eq 0}">
+            <c:url var="lockUrl" value="/user/lock" />
+            <s:form id="lockForm" name="user" style="display: yes" modelAttribute="user"  method="post" action="${lockUrl}">
+
+                <s:input id="userId" type="hidden" path="id" value="${user.id}" maxlength="3"/>
+                <div>
+                    <input id="lockCard" type="submit" value="Заблокировать"/>
+                </div>
+            </s:form>
+        </c:if>
+        <c:if test="${user.creditCard.statusId eq 2}">
+            <c:url var="unlockUrl" value="/user/unlock"/>
+            <s:form id="unlockForm" name="user" style="display: yes" modelAttribute="user"  method="post" action="${unlockUrl}">
+
+                <s:input id="userId" type="hidden" path="id" value="${user.id}" maxlength="3"/>
+                <div>
+                    <input id="unlockCard" type="submit" value="Разблокировать"/>
+                </div>
+            </s:form>
+        </c:if>
+
+        <br/><br/>
+        <label>Лицевой счет:</label><br/>
+        <label>№ ${user.account.num}</label><br/>
+        <label>баланс ${user.account.balance}</label><br/>
+        <label>дата открытия ${user.account.dateOpen}</label><br/>
+        <label>статус     
+
+            <c:if test="${user.account.statusId eq 0}">
+                Действителен
+            </c:if>
+            <c:if test="${user.account.statusId eq 1}">
+                Аннулирован
+            </c:if>
+        </label><br/>
+
+        <c:if test="${user.account.statusId eq 0}">
+            <c:url var="annulUrl" value="/user/annul" />
+            <s:form id="annulForm" name="user" style="display: yes" modelAttribute="user"  method="post" action="${annulUrl}">
+
+                <s:input id="userId" type="hidden" path="id" value="${user.id}" maxlength="3"/>
+                <div>
+                    <input id="annulAcc" type="submit" value="Аннулировать"/>
+                </div>
+            </s:form>
+        </c:if>
+        <c:if test="${user.account.statusId eq 1}">
+            <c:url var="activeUrl" value="/user/active"/>
+            <s:form id="activeForm" name="user" style="display: yes" modelAttribute="user"  method="post" action="${activeUrl}">
+
+                <s:input id="userId" type="hidden" path="id" value="${user.id}" maxlength="3"/>
+                <div>
+                    <input id="activeAcc" type="submit" value="Активировать"/>
+                </div>
+            </s:form>
+        </c:if>
+
+
+
+        <c:url var="transferUrl" value="/user/trans" />
+        <s:form id="transferForm" name="order" style="display: yes" modelAttribute="order" method="post" action="${transferUrl}">
+            <fieldset>
+
+                <label for="price">price</label>
+                <s:input id="price" type="text" value="25" maxlength="20" path="price" placeholder="Order price"/><br/>
+                <label for="userId">User</label>
+                <s:select id="userId" path="user.id">
+                    <c:forEach var="theUser" items="${persons}">
+                        <s:option value="${theUser.id}"><c:out value="${theUser.lastName} ${theUser.firstName}"/></s:option>
+                    </c:forEach>
+                </s:select>
+                <s:input id="sourceUserId" type="hidden" value="${user.id}" maxlength="20" path="id" placeholder="Order id"/><br/>
+                <div>
+                    <input id="transfer" type="submit" value="Перевести"/>
+                </div>
+                <br/>
+            </fieldset>
+        </s:form>
+
+
+        <br/><br/>
+        <table id="orderTable">
+
+            <tr class="blue">
+                <td><label>№</label></td>
+                <td><label>номер заказа</label></td>
+                <td><label>цена</label></td>
+                <td><label></label></td>
             </tr>
 
-        </c:forEach>
+            <c:forEach var="order" items="${user.orders}" varStatus="iter">
 
-    </table>
-</body>
+                <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
+                    <td>
+
+                        ${iter.index+1}
+                    </td>
+                    <td>
+                        ${order.num}
+                    </td>
+                    <td>
+                        ${order.price}
+                    </td>
+                    <td>
+                        <c:url var="payUrl" value="/user/pay" />
+                        <s:form id="orderFormDel" name="order" style="display: yes" modelAttribute="order"  method="post" action="${payUrl}">
+
+                            <s:input id="personId" type="hidden" path="id" value="${order.id}" maxlength="3"/>
+                            <div>
+                                <input id="delOrder" type="submit" value="Оплатить"/>
+                            </div>
+                        </s:form>
+
+
+                    </td>
+
+                </tr>
+
+            </c:forEach>
+
+        </table>
+
+        <br/><br/>
+        <table id="paymentTable">
+
+            <tr class="blue">
+                <td><label>№</label></td>
+                <td><label>номер заказа</label></td>
+                <td><label>цена</label></td>
+                <td><label>дата оплаты</label></td>
+            </tr>
+
+            <c:forEach var="payedOrder" items="${payedOrders}" varStatus="iter">
+
+                <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
+                    <td>
+
+                        ${iter.index+1}
+                    </td>
+                    <td>
+                        ${payedOrder.num}
+                    </td>
+                    <td>
+                        ${payedOrder.price}
+                    </td>
+                    <td>
+                        ${payedOrder.payment.datePayment}
+                    </td>
+                </tr>
+
+            </c:forEach>
+
+        </table>
+    </body>
 </html>

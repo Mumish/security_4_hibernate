@@ -5,9 +5,13 @@ import java.util.List;
 
 public interface CreditCardService extends DataService<CreditCard> {
 
-    void lockCard(CreditCard card);
+    void lockCardByAdmin(CreditCard card);
 
-    void unlockCard(CreditCard card);
+    void lockCardByUser(CreditCard card);
+
+    void unlockCardByAdmin(CreditCard card);
+
+    void unlockCardByUser(CreditCard card);
 
     List<CreditCard> lockedCardList();
 

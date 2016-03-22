@@ -2,7 +2,6 @@ package by.it.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,8 +26,6 @@ public class Payment implements Serializable {
     private long paymentId;
 
     @Column
-    private double amount;
-    @Column
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date datePayment;
 
@@ -43,14 +40,6 @@ public class Payment implements Serializable {
 
     public void setPaymentId(long paymentId) {
         this.paymentId = paymentId;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
     }
 
     public Date getDatePayment() {
@@ -71,7 +60,7 @@ public class Payment implements Serializable {
 
     @Override
     public String toString() {
-        return "paymentId=" + this.getPaymentId() + ", amount=" + this.getAmount() + ", datePayment=" + this.getDatePayment();
+        return "paymentId=" + this.getPaymentId() + ", datePayment=" + this.getDatePayment();
     }
 
 }

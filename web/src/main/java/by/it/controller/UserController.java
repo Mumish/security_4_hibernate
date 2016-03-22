@@ -11,9 +11,9 @@
  */
 package by.it.controller;
 
-import by.it.model.CreditCard;
 import by.it.model.PayOrder;
 import by.it.model.User;
+import by.it.service.AccountService;
 import by.it.service.CreditCardService;
 import by.it.service.PayOrderService;
 import by.it.service.UserService;
@@ -39,6 +39,8 @@ public class UserController {
     private PayOrderService orderService;
     @Autowired
     private CreditCardService cardsService;
+    @Autowired
+    private AccountService accountService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String userPage(ModelMap model) {
@@ -46,11 +48,14 @@ public class UserController {
         model.addAttribute("userName", userName);
         User user = userService.findByUserName(userName);
         List<PayOrder> orders = new ArrayList<>();
+        List<PayOrder> payedOrders = new ArrayList<>();
 
         for (PayOrder order : user.getOrders()) {
 
             if (order.getPayment() == null) {
                 orders.add(order);
+            } else {
+                payedOrders.add(order);
             }
         }
 
@@ -59,7 +64,13 @@ public class UserController {
         model.addAttribute("user", user);
         if (user.getOrders().size() > 0) {
             model.addAttribute("order", user.getOrders().get(0));
+        } else {
+            model.addAttribute("order", new PayOrder());
         }
+
+        model.addAttribute("payedOrders", payedOrders);
+
+        fillPersonsModel(model);
 
         return "user";
     }
@@ -77,100 +88,71 @@ public class UserController {
         return "redirect:/user";
     }
 
-    @RequestMapping(value = "/persons/add", method = RequestMethod.POST)
-    public String addPerson(ModelMap model, @Valid User user, BindingResult br) {
+    @RequestMapping(value = "/lock", method = RequestMethod.POST)
+    public String lockCard(ModelMap model, @Valid User user, BindingResult br) {
+        if (user != null && user.getId() > 0) {
+            user = userService.findById(user.getId());
+            cardsService.lockCardByUser(user.getCreditCard());
+            model.put("message", "CreditCard: " + user.getCreditCard().getNum() + " was locked");
+        }
+
+        return "redirect:/user";
+    }
+
+    @RequestMapping(value = "/unlock", method = RequestMethod.POST)
+    public String unlockCard(ModelMap model, @Valid User user, BindingResult br) {
+        if (user != null && user.getId() > 0) {
+            user = userService.findById(user.getId());
+            cardsService.unlockCardByUser(user.getCreditCard());
+            model.put("message", "CreditCard: " + user.getCreditCard().getNum() + " was unlocked");
+        }
+
+        return "redirect:/user";
+    }
+
+    @RequestMapping(value = "/annul", method = RequestMethod.POST)
+    public String annulAccount(ModelMap model, @Valid User user, BindingResult br) {
+        if (user != null && user.getId() > 0) {
+            user = userService.findById(user.getId());
+            accountService.annulAccountByUser(user.getAccount());
+            model.put("message", "Account: " + user.getCreditCard().getNum() + " was annuled");
+        }
+
+        return "redirect:/user";
+    }
+
+    @RequestMapping(value = "/active", method = RequestMethod.POST)
+    public String activeAccount(ModelMap model, @Valid User user, BindingResult br) {
+        if (user != null && user.getId() > 0) {
+            user = userService.findById(user.getId());
+            accountService.activeAccountByUser(user.getAccount());
+            model.put("message", "Account: " + user.getCreditCard().getNum() + " was actived");
+        }
+
+        return "redirect:/user";
+    }
+
+    @RequestMapping(value = "/trans", method = RequestMethod.POST)
+    public String transfer(ModelMap model, @Valid PayOrder payOrder, BindingResult br) {
         if (!br.hasErrors()) {
-            if (user != null) {
-                userService.saveNewUser(user);
-                model.put("person", user);
+            if (payOrder != null && payOrder.getUser().getId() > 0 && payOrder.getId() > 0 && payOrder.getPrice() > 0) {
+                userService.transfer(payOrder);
             }
         }
-        model.put("persons", userService.getAll());
-        return "redirect:/admin/persons";
-    }
-
-    @RequestMapping(value = "/cards/lock", method = RequestMethod.POST)
-    public String lockCard(ModelMap model, @Valid CreditCard creditCard, BindingResult br) {
-        if (creditCard != null && creditCard.getCreditCardId() > 0) {
-            cardsService.lockCard(creditCard);
-            model.put("message", "Order: " + creditCard.getNum() + " was locked");
-        }
-        fillOrdersModel(model);
-
-        return "redirect:/admin/cards";
-    }
-
-    @RequestMapping(value = "/cards/unlock", method = RequestMethod.POST)
-    public String unlockCard(ModelMap model, @Valid CreditCard creditCard, BindingResult br) {
-        if (creditCard != null && creditCard.getCreditCardId() > 0) {
-            cardsService.unlockCard(creditCard);
-            model.put("message", "Order: " + creditCard.getNum() + " was unlocked");
-        }
-        fillOrdersModel(model);
-
-        return "redirect:/admin/cards";
-    }
-
-    @RequestMapping(value = "/persons/delete", method = RequestMethod.POST)
-    public String deletePerson(ModelMap model, User user) {
-        if (user != null && user.getId() > 0) {
-            userService.delete(user);
-            model.put("message", "User: " + user.getUserName() + " was deleted");
-        }
-        fillPersonsModel(model);
-
-        return "redirect:/admin/persons";
-    }
-
-    @RequestMapping(value = "/orders/delete", method = RequestMethod.POST)
-    public String deletePerson(ModelMap model, PayOrder order) {
-        if (order != null && order.getId() > 0) {
-            orderService.delete(order);
-            model.put("message", "Order: " + order.getNum() + " was deleted");
-        }
-        fillOrdersModel(model);
-
-        return "redirect:/admin/orders";
+        return "redirect:/user";
     }
 
     private void fillPersonsModel(ModelMap model) {
         List<User> list = userService.getAll();
+
+        User user = (User) model.get("user");
+        list.remove(user);
         model.put("persons", list);
         User person = new User();
         if (list.size() > 0) {
             person = list.get(0);
         }
         model.put("person", person);
-    }
-
-    private void fillOrdersModel(ModelMap model) {
-        List<PayOrder> list = orderService.getAll();
-        model.put("orders", list);
-        PayOrder order = new PayOrder();
-//        order.setUser(new User());
-        if (list.size() > 0) {
-            order = list.get(0);
-        }
-        model.put("order", order);
-    }
-
-    private void fillCardsModel(ModelMap model) {
-        List<CreditCard> list = cardsService.lockedCardList();
-        model.put("lockedCards", list);
-        CreditCard card = new CreditCard();
-//        order.setUser(new User());
-        if (list.size() > 0) {
-            card = list.get(0);
-        }
-        model.put("card", card);
-
-        list = cardsService.forLockCardList();
-        model.put("forLockCards", list);
-
-    }
-
-    void createAdminIfNeed() {
-        userService.createAdminIfNeed();
     }
 
     String getPrincipal() {

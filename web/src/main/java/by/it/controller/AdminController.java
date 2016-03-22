@@ -99,8 +99,8 @@ public class AdminController {
     @RequestMapping(value = "/cards/lock", method = RequestMethod.POST)
     public String lockCard(ModelMap model, @Valid CreditCard creditCard, BindingResult br) {
         if (creditCard != null && creditCard.getCreditCardId() > 0) {
-            cardsService.lockCard(creditCard);
-            model.put("message", "Order: " + creditCard.getNum() + " was locked");
+            cardsService.lockCardByAdmin(creditCard);
+            model.put("message", "CreditCard: " + creditCard.getNum() + " was locked");
         }
         fillOrdersModel(model);
 
@@ -110,8 +110,8 @@ public class AdminController {
     @RequestMapping(value = "/cards/unlock", method = RequestMethod.POST)
     public String unlockCard(ModelMap model, @Valid CreditCard creditCard, BindingResult br) {
         if (creditCard != null && creditCard.getCreditCardId() > 0) {
-            cardsService.unlockCard(creditCard);
-            model.put("message", "Order: " + creditCard.getNum() + " was unlocked");
+            cardsService.unlockCardByAdmin(creditCard);
+            model.put("message", "CreditCard: " + creditCard.getNum() + " was unlocked");
         }
         fillOrdersModel(model);
 

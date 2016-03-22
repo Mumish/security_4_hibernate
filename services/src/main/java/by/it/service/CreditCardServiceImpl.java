@@ -14,8 +14,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Autowired
     private CreditCardDao creditCardDao;
-    @Autowired
-    private UserService userService;
 
     public void persist(CreditCard creditCard) {
         creditCardDao.persist(creditCard);
@@ -37,8 +35,8 @@ public class CreditCardServiceImpl implements CreditCardService {
         return creditCardDao.getByKey(id);
     }
 
-    public void lockCard(CreditCard card) {
-        if (card.getCreditCardId() > 0 && card.getBalance() < 0) {
+    public void lockCardByAdmin(CreditCard card) {
+        if (card.getCreditCardId() > 0 && card.getBalance() < 0 && card.getStatusId() == 0) {
 
             card = findById(card.getCreditCardId());
             card.setStatusId(1);
@@ -46,8 +44,25 @@ public class CreditCardServiceImpl implements CreditCardService {
         }
     }
 
-    public void unlockCard(CreditCard card) {
+    public void unlockCardByAdmin(CreditCard card) {
         if (card.getCreditCardId() > 0 && card.getStatusId() == 1) {
+            card = findById(card.getCreditCardId());
+            card.setStatusId(0);
+            creditCardDao.persist(card);
+        }
+    }
+
+    public void lockCardByUser(CreditCard card) {
+        if (card.getCreditCardId() > 0 && card.getStatusId() == 0) {
+
+            card = findById(card.getCreditCardId());
+            card.setStatusId(2);
+            creditCardDao.persist(card);
+        }
+    }
+
+    public void unlockCardByUser(CreditCard card) {
+        if (card.getCreditCardId() > 0 && card.getStatusId() == 2) {
             card = findById(card.getCreditCardId());
             card.setStatusId(0);
             creditCardDao.persist(card);

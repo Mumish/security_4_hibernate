@@ -13,4 +13,6 @@ public interface UserService extends DataService<User> {
 
     void payOrder(PayOrder payOrder);
 
+    void transfer(PayOrder payOrder);
+
 }
